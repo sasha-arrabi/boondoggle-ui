@@ -30,6 +30,6 @@ jobs:
     - name: Lint and test
       run: |
         npm run lint
-        npm test -- --watch=false --prod=true
+        npm test -- --watch=false
       env:
         CI: true
