@@ -10,8 +10,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
-
+  unit-test:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && contains(toJson(github.event.commits), '[ci skip]') == false && contains(toJson(github.event.commits), '[skip ci]') == false
 
@@ -31,5 +30,26 @@ jobs:
       run: |
         npm run lint
         npm test -- --watch=false
+      env:
+        CI: true
+  
+  e2e:
+    runs-on: [ubuntu-latest]
+    if: github.event_name == 'push' && contains(toJson(github.event.commits), '[ci skip]') == false && contains(toJson(github.event.commits), '[skip ci]') == false
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      
+    - name: Use Node.js 12.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.x
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run e2e tests
+      run: npm run e2e
       env:
         CI: true
